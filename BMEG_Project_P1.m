@@ -1,5 +1,8 @@
 clc, clear
 % hello there my name is matthew
+
+%Test From Oli 
+
 gender = 2; % 1 for female, 2 for male
 weight = 85; % Total body mass of subject in 'kg'
 height = 184; % Total body height of subject in 'cm'
