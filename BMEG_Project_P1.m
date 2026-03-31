@@ -49,9 +49,9 @@ end
 mass_system = sum([model(:).mass]);
 r_num = [model(:).mass].*[model(:).com_from_O];
 CoM_system = sum(r_num)/mass_system;
-disp([newline, 'Center of mass position = ',num2str(CoM_system),' m']);
+disp([newline, 'System center of mass position = ',num2str(CoM_system),' m']);
 
 % System inertia about the hip
 I_seg_o = [model(:).inertia] + [model(:).mass].*([model(:).com_from_O].^2);
 Inertia_system = sum(I_seg_o);
-disp(['Mass moment of inertia at O = ',num2str(Inertia_system),' kg.m^2']);
+disp(['System mass moment of inertia at O = ',num2str(Inertia_system),' kg.m^2']);
