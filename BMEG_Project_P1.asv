@@ -2,7 +2,7 @@ clc, clear
 
 gender = 2; % 1 for female, 2 for male
 weight = 85; % Total body mass of subject in 'kg'
-height = 1.84; % Total body height of subject in 'm'
+height = 184; % Total body height of subject in 'cm'
 
 % Segment factors based of De lava Table
 % Mass factor   Length factor   COM factor  Radius of Gyration factor
@@ -39,7 +39,7 @@ for part = 1:2
     model(part).rgyration = model(part).length*segment_table(gender).factors(part,4);
     model(part).inertia = model(part).mass*(model(part).rgyration).^2;
     
-    t = sprintf('%s\t\t %.3f\t\t %.3f\t\t %.3f\t\t %.3f\t\t %.5f',model(part).name,...
+    t = sprintf('%s\t\t %.3f\t\t %.3f \t %.3f\t\t %.3f\t\t %.5f',model(part).name,...
         model(part).mass, model(part).length, model(part).com_local,...
         model(part).rgyration, model(part).inertia);
     disp(t)
@@ -49,7 +49,8 @@ end
 mass_system = sum([model(:).mass]);
 r_num = [model(:).mass].*[model(:).com_from_O];
 CoM_system = sum(r_num)/mass_system;
-disp([newline, 'Center of mass position = ',num2str(CoM_system),' m']);
+sprintf('\n');
+disp(['Center of mass position = ',num2str(CoM_system),' m']);
 
 % System inertia about the hip
 I_seg_o = [model(:).inertia] + [model(:).mass].*([model(:).com_from_O].^2);
