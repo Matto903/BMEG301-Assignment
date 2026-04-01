@@ -23,8 +23,8 @@ T_motion = 5;                       % Motion duration in seconds
 
 % These are the first things i saw for the rom of the thigh about the hip.
 % we can change this if we find its different with more research - Oli
-theta_min = 0;                      % Minimum angle at extension
-theta_max = 120;                    % Maximum angle at flexion
+theta_min = deg2rad(-30);                      % Minimum angle at extension
+theta_max = deg2rad(120);                    % Maximum angle at flexion
 
 %% Segment Factor Tables
 
