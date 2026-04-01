@@ -171,7 +171,7 @@ end
 
 
 
-caseNum = 2;              % 1 = slow, 2 = normal, 3 = fast
+caseNum = 1;              % 1 = slow, 2 = normal, 3 = fast
 t1 = t_store{caseNum};
 theta1 = theta_store{caseNum};
 
