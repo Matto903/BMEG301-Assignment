@@ -227,8 +227,30 @@ M_hip_system_device = (Inertia_system_device .* alpha_store{3}) - (g * CoM_syste
 P_system_device = M_hip_system_device .* omega_store{3}; % Joint power Watts
 
 P_device = P_system_device - P_store{3};
-P_required = max(P_device + (0.5 .* P_store{3}));
+P_required = max(P_device + (0.5 .* P_store{3}))
+%% TASK 4 - Device Power-Mass Relationship
 
+
+
+% Parameters given in assignment
+a = 10.0;
+b = 50.0;
+c = 1.0;
+
+% Device mass range (kg)
+%m_device = linspace(0, 20, 500);   % adjust range if needed
+
+% Power equation
+P_max = (exp(m_device_total - a) ./ (1 + exp(m_device_total - a))) * b + c * m_device_total
+
+% Plot
+%figure
+%plot(m_device, P_max, 'LineWidth', 1.5)
+
+%xlabel('Total Device Mass (kg)')
+%%title('Device Power-Mass Relationship')
+
+%grid on
 
 
 
