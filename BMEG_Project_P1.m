@@ -111,3 +111,27 @@ theta = (theta_min + (theta_max - theta_min) .* s) .* (180/pi);         % Joint 
 
 omega = (theta_max - theta_min) .* k .*s .* (1 - s);                    % Angular velocity
 alpha = (theta_max - theta_min) .* k^2 .*s .* (1 - s) .* (1 - 2*s);     % Angular acceleration
+
+%% Plotting Results
+figure;
+
+% Joint Angle Over Time
+subplot(3, 1, 1);
+plot(T_simulation, theta);
+ylabel('Angle (deg)');
+xlabel('Time (s)')
+title('Joint Angle');
+
+% Joint Angular Velocity Over Time
+subplot(3, 1, 2);
+plot(T_simulation, omega)
+ylabel('Velocity (deg/s)');
+xlabel('Time (s)')
+title('Anglular Velocity');
+
+% Joint Angular Accelleration Over Time
+subplot(3, 1, 3);
+plot(T_simulation, alpha);
+ylabel('Accelleration (deg/s^2)');
+xlabel('Time (s)')
+title('Anglular Acceleration');
