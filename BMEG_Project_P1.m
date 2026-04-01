@@ -167,38 +167,34 @@ for i = 1:3
     title([label{i} 'Joint Power']);
     
 end
+
+
+
+
+caseNum = 2;              % 1 = slow, 2 = normal, 3 = fast
+t1 = t_store{caseNum};
+theta1 = theta_store{caseNum};
+
 L = model(1).length + model(2).length;
 
 figure
 
-for i = 1:length(t_store(1))
+hLeg = plot([0 0], [0 -L], 'LineWidth', 4);
+hold on
+plot(0,0,'ko','MarkerFaceColor','k')
+axis equal
+axis([-L L -L L])
+grid on
+xlabel('X Position (m)')
+ylabel('Y Position (m)')
 
-    % Position of end of leg
-    x = L * sind(theta_store{1});
-    y = -L * cosd(theta_store{1});
+for j = 1:length(t1)
+    x = L * sind(theta1(j));
+    y = -L * cosd(theta1(j));
 
-    clf
-    hold on
-
-    % Draw leg
-    plot([0 x], [0 y], 'LineWidth', 4)
-
-    % Draw hip joint
-    plot(0, 0, 'ko', 'MarkerFaceColor', 'k')
-
-    % Formatting
-    axis equal
-    axis([-L L -L 0.2*L])
-    xlabel('X Position (m)')
-    ylabel('Y Position (m)')
-    title(sprintf('Sagittal Plane Motion (t = %.2f s)', t(1)))
-
-    grid on
+    set(hLeg, 'XData', [0 x], 'YData', [0 y])
+    title(sprintf('Sagittal Plane Motion (%s), t = %.2f s', label{caseNum}, t1(j)))
 
     drawnow
+    pause(0.02)
 end
-
-L = model(1).length + model(2).length;
-
-figure
-
