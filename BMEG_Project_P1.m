@@ -5,26 +5,28 @@ weight = 85; % Total body mass of subject in 'kg'
 height = 1.84; % Total body height of subject in 'm'
 
 % Segment factors based of De lava Table
-% Mass factor   Length factor   COM factor  Radius of Gyration factor
+% [Mass factor   Length factor   COM factor  Radius of Gyration factor]
 
 % Female factors
 segment_table(1).factors = [ 
-0.1478  368.5/1735  0.3612  0.369;  % Thigh
-0.0481  432.3/1735  0.4416  0.271   % Shank
+0.1478  368.5/1735  0.3612  0.369;  % Thigh (female)
+0.0481  432.3/1735  0.4416  0.271   % Shank (female)
 ];
 
 % Male factors
 segment_table(2).factors = [
-0.1416  422.2/1741  0.4095  0.329;  % Thigh
-0.0433  434.0/1741  0.4459  0.255   % Shank
-]; 
+0.1416  422.2/1741  0.4095  0.329;  % Thigh (male)
+0.0433  434.0/1741  0.4459  0.255   % Shank (male)
+];  
 
 model(1).name = 'Thigh'; model(1).color = 'k';
 model(2).name = 'Shank'; model(2).color = 'r';
 
-table = sprintf('Part Name\t Mass\t\t Length \t COM\t\t RGyration\t Inertia');
+table = sprintf('Part Name \t Mass (kg)\t Length (m)\t COM (m)\t RGyration (m)\t Inertia (kg.m^2)');
 disp(table)
 
+% Assumption: The distal limb (shank) is fixed such that longitudinal axes
+% line up, thus all other limbs can be ignored
 for part = 1:2
 
     model(part).mass = weight*segment_table(gender).factors(part,1);
@@ -47,6 +49,10 @@ end
 
 % System center of mass
 mass_system = sum([model(:).mass]);
+
+% display system mass
+disp(['System mass = ', num2str(mass_system), ' kg']);
+
 r_num = [model(:).mass].*[model(:).com_from_O];
 CoM_system = sum(r_num)/mass_system;
 disp([newline, 'System center of mass position = ',num2str(CoM_system),' m']);
