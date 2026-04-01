@@ -35,7 +35,8 @@ segment_table(2).factors = [
 ];  
 
 
-%% Create Structures With All of The Model's Segment Details 
+%% TASK 1 
+% Create Structures With All of The Model's Segment Details 
 
 model(1).name = 'Thigh'; model(1).color = 'k';
 model(2).name = 'Shank'; model(2).color = 'r';
@@ -89,19 +90,17 @@ T_motion = 5;                       % Motion duration in seconds
 theta_min = -30 * (pi/180);           % Minimum angle at extension in rad
 theta_max = 120 * (pi/180);         % Maximum angle at flexion in rad
 
-%% Simulation 
+%% TASK 2
+% Simulation 
 Num_Frames = ceil(T_motion*fps);                        % Calculates number of frames in the simulation
 T_simulation = linspace(0, T_motion, Num_Frames);       % Creates a linearly spaced time vector for motion duration
 
 % Sigmoid Function To Calculate Joint Angle
-k = 10 / T_motion;                                                      % Steepness of sigmoid function (scales with the motion duration
+k = 10 / T_motion;                                                      % Steepness of sigmoid function (scales with the motion duration)
 s = 1 ./ (1 + exp(-k .* (T_simulation - (T_motion/2))));                % Sigmoid function
-theta = (theta_min + (theta_max - theta_min) .* s) .* (180/pi);         % Joint angle 
-
-
-
-omega = gradient(theta,T_simulation);                    % Angular velocity
-alpha = gradient(omega,T_simulation);     % Angular acceleration
+theta = (theta_min + (theta_max - theta_min) .* s) .* (180/pi);         % Joint angle in degrees
+omega = gradient(theta,T_simulation);                                   % Angular velocity
+alpha = gradient(omega,T_simulation);                                   % Angular acceleration
 
 %% Plotting Results
 figure;
@@ -126,3 +125,8 @@ plot(T_simulation, alpha);
 ylabel('Accelleration (deg/s^2)');
 xlabel('Time (s)')
 title('Anglular Acceleration');
+
+%% TASK 3
+
+g = -9.81; % Gravity
+M_hip = (Inertia_system * alpha) - (g * CoM_system * mass_system * cosd(theta)); % Moment about Hip in Nm
