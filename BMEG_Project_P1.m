@@ -127,6 +127,7 @@ for i=1:length(durations)
 end
 %% Plotting Results
 figure;
+sgtitle('Task 2: Human System');
 label = {'Slow ', 'Normal ', 'Fast '};
 
 for i = 1:3
@@ -153,11 +154,12 @@ for i = 1:3
 end
 
 figure;
+sgtitle('Task 3: Human System');
 for i = 1:3
     % Joint Moment Over Time
     subplot(2, 3, i);
     plot(t_store{i}, M_store{i});
-    ylabel('Angle (deg)');
+    ylabel('Moment (Nm)');
     xlabel('Time (s)')
     title([label{i} 'Joint Moment']);
     
@@ -212,16 +214,17 @@ Inertia_system_device = sum(I_seg_o_device);
 
 disp(['Combined system mass moment of inertia at O = ',num2str(Inertia_system_device),' kg.m^2']);
 
+M_system_device_store = cell(length(durations),1);
+P_system_device_store = cell(length(durations),1);
 
+for i=1:length(durations)
+    
+    M_hip_system_device = (Inertia_system_device * alpha_store{i}) - (g * CoM_system_device * mass_system_device * cos(theta_store{i})); % Moment about Hip in Nm
+    P_system_device = M_hip_system_device .* omega_store{i}; % Joint power Watts
 
-M_hip_system_device = (Inertia_system_device .* alpha_store{3}) - (g * CoM_system_device * mass_system_device * cos(theta_store{3})); % Moment about Hip in Nm
-P_system_device = M_hip_system_device .* omega_store{3}; % Joint power Watts
-
-P_device = P_system_device - P_store{3};
-P_required = max(P_device + (0.5 .* P_store{3}))
-%% TASK 4 - Device Power-Mass Relationship
-
-
+    M_system_device_store{i} = M_hip_system_device;
+    P_system_device_store{i} = P_system_device;
+end
 
 % Parameters given in assignment
 a = 10.0;
@@ -229,19 +232,49 @@ b = 50.0;
 c = 1.0;
 
 % Device mass range (kg)
-%m_device = linspace(0, 20, 500);   % adjust range if needed
+m_device = linspace(0, 20, 500);   % adjust range if needed
 
 % Power equation
 P_max = (exp(mass_device_total - a) ./ (1 + exp(mass_device_total - a))) * b + c * mass_device_total
 
+P_max1 = (exp(m_device - a) ./ (1 + exp(m_device - a))) * b + c * m_device
+
 % Plot
-%figure
-%plot(m_device, P_max, 'LineWidth', 1.5)
+figure;
+sgtitle('Task 4: Power to Mass Function')
+plot(m_device, P_max1, 'LineWidth', 1.5)
 
-%xlabel('Total Device Mass (kg)')
-%%title('Device Power-Mass Relationship')
+xlabel('Total Device Mass (kg)')
 
-%grid on
+grid on
+
+
+figure;
+sgtitle('Task 5: Human + Device System');
+
+for i = 1:3
+    % Joint Moment Over Time
+    subplot(2, 3, i);
+    plot(t_store{i}, M_system_device_store{i});
+    ylabel('Angle (deg)');
+    xlabel('Time (s)')
+    title([label{i} 'Joint Moment']);
+    
+    % Joint Power Over Time
+    subplot(2, 3, i + 3);
+    plot(t_store{i}, P_system_device_store{i})
+    ylabel('Power (W)');
+    xlabel('Time (s)')
+    title([label{i} 'Joint Power']);
+    
+end
+
+P_device = P_system_device - P_store{3};
+P_required = max(P_device + (0.5 .* P_store{3}))
+%% TASK 4 - Device Power-Mass Relationship
+
+
+
 
 
 M_Device=M_hip_system_device-M_store{3};
@@ -281,7 +314,7 @@ theta1 = theta_store{caseNum};
 L = model(1).length + model(2).length;
 
 figure;
-
+sgtitle('Task 3: Human Limb Animation');
 hLeg = plot([0 0], [0 -L], 'LineWidth', 4);
 hold on
 plot(0,0,'ko','MarkerFaceColor','k')
