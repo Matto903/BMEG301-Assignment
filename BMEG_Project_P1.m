@@ -100,8 +100,8 @@ theta = (theta_min + (theta_max - theta_min) .* s) .* (180/pi);         % Joint 
 
 
 
-omega = gradient(theta,T_simulation)                    % Angular velocity
-alpha = gradient(omega,T_simulation)     % Angular acceleration
+omega = gradient(theta,T_simulation);                    % Angular velocity
+alpha = gradient(omega,T_simulation);     % Angular acceleration
 
 %% Plotting Results
 figure;
