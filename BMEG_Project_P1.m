@@ -169,6 +169,22 @@ for i = 1:3
 end
 hold off;
 
+m_device_total = 8;                  % example
+m_device_pivoted = 0.6 * m_device_total;
+
+model_device = model;
+
+model_device(1).rgyration = model(1).rgyration;
+model_device(1).mass = model_device(1).mass + m_device_pivoted;
+model_device(1).inertia = model_device(1).mass * (model_device(1).rgyration)^2;
+
+mass_system_device = sum([model_device.mass]);
+CoM_system_device = sum([model_device.mass] .* [model_device.com_from_O]) / mass_system_device;
+I_seg_o_device = [model_device.inertia] + [model_device.mass] .* ([model_device.com_from_O].^2);
+Inertia_system_device = sum(I_seg_o_device);
+disp(mass_system_device)
+disp(CoM_system_device)
+disp(I_seg_o_device)
 
 
 caseNum = 1;              % 1 = slow, 2 = normal, 3 = fast
