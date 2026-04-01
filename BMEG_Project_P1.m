@@ -109,13 +109,13 @@ for i=1:length(durations)
     T_simulation = linspace(0, T_motion, Num_Frames);       % Creates a linearly spaced time vector for motion duration
 
     % Sigmoid Function To Calculate Joint Angle
-    k = 10 / T_motion;                                                      % Steepness of sigmoid function (scales with the motion duration)
+    k = 2.5;                                                                % Steepness of sigmoid function (scales with the motion duration)
     s = 1 ./ (1 + exp(-k .* (T_simulation - (T_motion/2))));                % Sigmoid function
-    theta = (theta_min + (theta_max - theta_min) .* s) .* (180/pi);         % Joint angle in degrees
-    omega = gradient(theta,T_simulation);                                   % Angular velocity
-    alpha = gradient(omega,T_simulation);                                   % Angular acceleration
+    theta = (theta_min + (theta_max - theta_min) .* s);                     % Joint angle in rad
+    omega = gradient(theta,T_simulation);                                   % Angular velocity rad/s
+    alpha = gradient(omega,T_simulation);                                   % Angular acceleration rad/s^2
     g = -9.81; % Gravity
-    M_hip = (Inertia_system * alpha) - (g * CoM_system * mass_system * cosd(theta)); % Moment about Hip in Nm
+    M_hip = (Inertia_system * alpha) - (g * CoM_system * mass_system * cos(theta)); % Moment about Hip in Nm
     P = M_hip .* omega; % Joint power Watts
 
     t_store{i} = T_simulation;
@@ -132,21 +132,21 @@ label = {'Slow ', 'Normal ', 'Fast '};
 for i = 1:3
     % Joint Angle Over Time
     subplot(3, 3, i);
-    plot(t_store{i}, theta_store{i});
+    plot(t_store{i}, theta_store{i} .* (180/pi));
     ylabel('Angle (deg)');
     xlabel('Time (s)')
     title([label{i} 'Joint Angle']);
     
     % Joint Angular Velocity Over Time
     subplot(3, 3, i + 3);
-    plot(t_store{i}, omega_store{i})
+    plot(t_store{i}, omega_store{i} .* (180/pi))
     ylabel('Velocity (deg/s)');
     xlabel('Time (s)')
     title([label{i} 'Joint Anglular Velocity']);
     
     % Joint Angular Accelleration Over Time
     subplot(3, 3, i + 6);
-    plot(t_store{i}, alpha_store{i});
+    plot(t_store{i}, alpha_store{i} .* (180/pi));
     ylabel('Accelleration (deg/s^2)');
     xlabel('Time (s)')
     title([label{i} 'Joint Anglular Accelleration']);
@@ -175,12 +175,8 @@ hold off;
 
 %% Part 5
 
-mass_device_total = 8;         % EXAMPLE device mass in kg
+mass_device_total = 13;         % EXAMPLE device mass in kg
 mass_device_pivoted = 0.6 .* mass_device_total;
-
-% Part 5
-m_device_total = 8;                  % example
-m_device_pivoted = 0.6 * m_device_total;
 
 
 model_device = model;
@@ -218,7 +214,7 @@ disp(['Combined system mass moment of inertia at O = ',num2str(Inertia_system_de
 
 
 
-M_hip_system_device = (Inertia_system_device .* alpha_store{3}) - (g * CoM_system_device * mass_system_device * cosd(theta_store{3})); % Moment about Hip in Nm
+M_hip_system_device = (Inertia_system_device .* alpha_store{3}) - (g * CoM_system_device * mass_system_device * cos(theta_store{3})); % Moment about Hip in Nm
 P_system_device = M_hip_system_device .* omega_store{3}; % Joint power Watts
 
 P_device = P_system_device - P_store{3};
@@ -236,7 +232,7 @@ c = 1.0;
 %m_device = linspace(0, 20, 500);   % adjust range if needed
 
 % Power equation
-P_max = (exp(m_device_total - a) ./ (1 + exp(m_device_total - a))) * b + c * m_device_total
+P_max = (exp(mass_device_total - a) ./ (1 + exp(mass_device_total - a))) * b + c * mass_device_total
 
 % Plot
 %figure
@@ -270,8 +266,8 @@ xlabel('X Position (m)')
 ylabel('Y Position (m)')
 
 for j = 1:length(t1)
-    x = L * sind(theta1(j));
-    y = -L * cosd(theta1(j));
+    x = L * sin(theta1(j));
+    y = -L * cos(theta1(j));
 
     set(hLeg, 'XData', [0 x], 'YData', [0 y])
     
