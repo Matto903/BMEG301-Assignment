@@ -269,6 +269,8 @@ pressure_kPa = pressure / 1000;           % kPa
 F_peak = max(F_strap);
 pressure_peak = max(pressure);
 pressure_peak_kPa = max(pressure_kPa)
+pressure_avg = mean(pressure);          % Pa
+pressure_avg_kPa = mean(pressure_kPa)  % kPa
 
 
 %% Animation
