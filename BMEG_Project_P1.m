@@ -1,5 +1,5 @@
  %% BMEG301 Reverse Dynamic Solution For Device 3
-% Authors: Bailey Phillips, Matthew Nuske, Oliver Michels, and Kyan Phillips
+% Authors: Bailey Phillips, Matthew Nuske, Oliver Michels
 
 %% Assumptions
 
@@ -38,11 +38,13 @@ segment_table(2).factors = [
 %% TASK 1 
 % Create Structures With All of The Model's Segment Details 
 
+disp('Human only system:');
+
 model(1).name = 'Thigh'; model(1).color = 'k';
 model(2).name = 'Shank'; model(2).color = 'r';
 
 table = sprintf('Part Name \t Mass (kg)\t Length (m)\t COM (m)\t RGyration (m)\t Inertia (kg.m^2)');
-disp(table)
+disp([newline, table]);
 
 % Assumption: The distal limb (shank) is fixed such that longitudinal axes
 % line up, thus all other limbs can be ignored
@@ -63,18 +65,18 @@ for part = 1:2
     t = sprintf('%s\t\t %.3f\t\t %.3f\t\t %.3f\t\t %.3f\t\t %.5f',model(part).name,...
         model(part).mass, model(part).length, model(part).com_local,...
         model(part).rgyration, model(part).inertia);
-    disp(t)
+    disp(t);
 end
 
 % System Center of Mass
 mass_system = sum([model(:).mass]);
 
 % display system mass
-disp(['System mass = ', num2str(mass_system), ' kg']);
+disp([newline, 'System mass = ', num2str(mass_system), ' kg']);
 
 r_num = [model(:).mass].*[model(:).com_from_O];
 CoM_system = sum(r_num)/mass_system;
-disp([newline, 'System center of mass position = ',num2str(CoM_system),' m']);
+disp(['System center of mass position = ',num2str(CoM_system),' m']);
 
 % System Inertia About The Hip
 I_seg_o = [model(:).inertia] + [model(:).mass].*([model(:).com_from_O].^2);
@@ -169,24 +171,57 @@ for i = 1:3
 end
 hold off;
 
-m_device_total = 8;                  % example
-m_device_pivoted = 0.6 * m_device_total;
+
+%% Part 5
+
+mass_device_total = 8;         % EXAMPLE device mass in kg
+mass_device_pivoted = 0.6 .* mass_device_total;
 
 model_device = model;
 
 model_device(1).rgyration = model(1).rgyration;
-model_device(1).mass = model_device(1).mass + m_device_pivoted;
+model_device(1).mass = model_device(1).mass + mass_device_pivoted;
 model_device(1).inertia = model_device(1).mass * (model_device(1).rgyration)^2;
 
-mass_system_device = sum([model_device.mass]);
-CoM_system_device = sum([model_device.mass] .* [model_device.com_from_O]) / mass_system_device;
-I_seg_o_device = [model_device.inertia] + [model_device.mass] .* ([model_device.com_from_O].^2);
+disp([newline, 'Combined System:']);
+disp([newline, table]);
+
+for part = 1:2
+    t_device = sprintf('%s\t\t %.3f\t\t %.3f\t\t %.3f\t\t %.3f\t\t %.5f',model_device(part).name,...
+            model_device(part).mass, model_device(part).length, model_device(part).com_local,...
+            model_device(part).rgyration, model_device(part).inertia);
+        disp(t_device);
+end
+
+
+% Combined System Center of Mass
+mass_system_device = sum([model_device(:).mass]);
+
+% Display combined system mass
+disp([newline, 'Combined system mass = ', num2str(mass_system_device), ' kg']);
+
+r_num_device = [model_device(:).mass] .* [model_device(:).com_from_O];
+CoM_system_device = sum(r_num_device)/mass_system_device;
+disp(['Combined system center of mass position = ',num2str(CoM_system_device),' m']);
+
+% Combined System Inertia About The Hip
+I_seg_o_device = [model_device(:).inertia] + [model_device(:).mass].*([model_device(:).com_from_O].^2);
 Inertia_system_device = sum(I_seg_o_device);
-disp(mass_system_device)
-disp(CoM_system_device)
-disp(I_seg_o_device)
+disp(['Combined system mass moment of inertia at O = ',num2str(Inertia_system_device),' kg.m^2']);
 
 
+M_hip_system_device = (Inertia_system_device .* alpha_store{3}) - (g * CoM_system_device * mass_system_device * cosd(theta_store{3})); % Moment about Hip in Nm
+P_system_device = M_hip_system_device .* omega_store{3}; % Joint power Watts
+
+P_device = P_system_device - P_store{3};
+P_required = max(P_device + (0.5 .* P_store{3}));
+
+
+
+
+
+
+%% Animation
 caseNum = 1;              % 1 = slow, 2 = normal, 3 = fast
 t1 = t_store{caseNum};
 theta1 = theta_store{caseNum};
