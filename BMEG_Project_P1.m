@@ -202,29 +202,3 @@ L = model(1).length + model(2).length;
 
 figure
 
-for i = 1:length(t)
-
-    % Position of end of leg
-    x = L * sin(theta(i));
-    y = -L * cos(theta(i));
-
-    clf
-    hold on
-
-    % Draw leg
-    plot([0 x], [0 y], 'LineWidth', 4)
-
-    % Draw hip joint
-    plot(0, 0, 'ko', 'MarkerFaceColor', 'k')
-
-    % Formatting
-    axis equal
-    axis([-L L -L 0.2*L])
-    xlabel('X Position (m)')
-    ylabel('Y Position (m)')
-    title(sprintf('Sagittal Plane Motion (t = %.2f s)', t(i)))
-
-    grid on
-
-    drawnow
-end
