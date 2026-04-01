@@ -172,11 +172,19 @@ end
 % Animation
 figure;
 for i = 1:3
-    % Animation
-    subplot(3, 3, [i, i+3, i+6]);
-    plot(t_store{i}, M_store{i});
-    ylabel('Angle (deg)');
-    xlabel('Time (s)')
-    title([label{i} 'Joint Moment']);
-    
+    for j = 1:length(t_store{i})
+        subplot(3,3,[i i+3 i+6]); cla; hold on;
+        jointpos = [0 0]; 
+        for segment = 1:length(model)
+            jointpos(segment+1,:) = jointpos(segment,:) + ...
+                model(segment).length*[cos(theta_store{i}) sin(theta_store{i})];
+            plot([jointpos(segment,1) jointpos(segment+1,1)],...
+                [jointpos(segment,2) jointpos(segment+1,2)],...
+                model(segment).color,'LineWidth',15);                
+            scatter(0,0,150,'or','filled');
+            title(['Simulation time = ', num2str(tsim(j))]);
+            axis([-0.4 0.8 -1.0 0.2]);
+            axis square;
+        end
+    end     
 end
