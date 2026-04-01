@@ -244,7 +244,25 @@ P_max = (exp(mass_device_total - a) ./ (1 + exp(mass_device_total - a))) * b + c
 %grid on
 
 
+M_Device=M_hip_system_device-M_store{3};
 
+% Assumed device cuff geometry
+r_arm = 0.3;                     % m, effective moment arm from hip to thigh cuff
+strap_width = 0.08;               % m
+contact_length = 0.3;            % m
+A_strap = strap_width * contact_length;   % m^2
+
+% Strap force magnitude
+F_strap = abs(M_Device) ./ r_arm;         % N
+
+% Pressure on thigh
+pressure = F_strap ./ A_strap;            % Pa
+pressure_kPa = pressure / 1000;           % kPa
+
+% Peak values
+F_peak = max(F_strap);
+pressure_peak = max(pressure);
+pressure_peak_kPa = max(pressure_kPa)
 
 
 %% Animation
