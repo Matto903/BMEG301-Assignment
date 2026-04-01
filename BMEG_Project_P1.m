@@ -89,10 +89,25 @@ I_seg_o = [model(:).inertia] + [model(:).mass].*([model(:).com_from_O].^2);
 Inertia_system = sum(I_seg_o);
 disp(['System mass moment of inertia at O = ',num2str(Inertia_system),' kg.m^2']);
 
+%% Simulation Parameters
+fps = 50;                           % Frames per second 
+T_motion = 5;                       % Motion duration in seconds
+
+% These are the first things i saw for the rom of the thigh about the hip.
+% we can change this if we find its different with more research - Oli
+theta_min = -30 * (pi/180);           % Minimum angle at extension in rad
+theta_max = 120 * (pi/180);         % Maximum angle at flexion in rad
 
 %% Simulation 
 Num_Frames = ceil(T_motion*fps);                        % Calculates number of frames in the simulation
 T_simulation = linspace(0, T_motion, Num_Frames);       % Creates a linearly spaced time vector for motion duration
 
+% Sigmoid Function To Calculate Joint Angle
+k = 10 / T_motion;                                                      % Steepness of sigmoid function (scales with the motion duration
+s = 1 ./ (1 + exp(-k .* (T_simulation - (T_motion/2))));                % Sigmoid function
+theta = (theta_min + (theta_max - theta_min) .* s) .* (180/pi);         % Joint angle 
 
 
+
+omega = (theta_max - theta_min) .* k .*s .* (1 - s);                    % Angular velocity
+alpha = (theta_max - theta_min) .* k^2 .*s .* (1 - s) .* (1 - 2*s);     % Angular acceleration
