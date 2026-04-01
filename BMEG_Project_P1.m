@@ -91,7 +91,7 @@ theta_min = -30 * (pi/180);           % Minimum angle at extension in rad
 theta_max = 120 * (pi/180);         % Maximum angle at flexion in rad
 
 %% TASK 2
-durations=[5,3,1];
+durations=[1,3,5];
 
 t_store = cell(length(durations),1);
 theta_store = cell(length(durations),1);
@@ -121,30 +121,49 @@ for i=1:length(durations)
     omega_store{i} = omega;
     alpha_store{i} = alpha;
     M_store{i} = M_hip;
+    P_store{i} = P;
 end
 %% Plotting Results
 figure;
+label = {'Slow ', 'Normal ', 'Fast '};
 
-% Joint Angle Over Time
-subplot(3, 1, 1);
-plot(T_simulation, theta);
-ylabel('Angle (deg)');
-xlabel('Time (s)')
-title('Joint Angle');
+for i = 1:3
+    % Joint Angle Over Time
+    subplot(3, 3, i);
+    plot(t_store{i}, theta_store{i});
+    ylabel('Angle (deg)');
+    xlabel('Time (s)')
+    title([label{i} 'Joint Angle']);
+    
+    % Joint Angular Velocity Over Time
+    subplot(3, 3, i + 3);
+    plot(t_store{i}, omega_store{i})
+    ylabel('Velocity (deg/s)');
+    xlabel('Time (s)')
+    title([label{i} 'Joint Anglular Velocity']);
+    
+    % Joint Angular Accelleration Over Time
+    subplot(3, 3, i + 6);
+    plot(t_store{i}, alpha_store{i});
+    ylabel('Accelleration (deg/s^2)');
+    xlabel('Time (s)')
+    title([label{i} 'Joint Anglular Accelleration']);
+end
 
-% Joint Angular Velocity Over Time
-subplot(3, 1, 2);
-plot(T_simulation, omega)
-ylabel('Velocity (deg/s)');
-xlabel('Time (s)')
-title('Anglular Velocity');
-
-% Joint Angular Accelleration Over Time
-subplot(3, 1, 3);
-plot(T_simulation, alpha);
-ylabel('Accelleration (deg/s^2)');
-xlabel('Time (s)')
-title('Anglular Acceleration');
-
-%% TASK 3
-
+figure;
+for i = 1:3
+    % Joint Moment Over Time
+    subplot(2, 3, i);
+    plot(t_store{i}, M_store{i});
+    ylabel('Angle (deg)');
+    xlabel('Time (s)')
+    title([label{i} 'Joint Moment']);
+    
+    % Joint Power Over Time
+    subplot(2, 3, i + 3);
+    plot(t_store{i}, P_store{i})
+    ylabel('Velocity (deg/s)');
+    xlabel('Time (s)')
+    title([label{i} 'Joint Power']);
+    
+end
