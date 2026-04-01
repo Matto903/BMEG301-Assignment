@@ -167,3 +167,16 @@ for i = 1:3
     title([label{i} 'Joint Power']);
     
 end
+
+
+% Animation
+figure;
+for i = 1:3
+    % Animation
+    subplot(3, 3, [i, i+3, i+6]);
+    plot(t_store{i}, M_store{i});
+    ylabel('Angle (deg)');
+    xlabel('Time (s)')
+    title([label{i} 'Joint Moment']);
+    
+end
