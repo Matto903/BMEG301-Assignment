@@ -111,9 +111,9 @@ for i=1:length(durations)
     % Sigmoid Function To Calculate Joint Angle
     k = 10 / T_motion;                                                      % Steepness of sigmoid function (scales with the motion duration)
     s = 1 ./ (1 + exp(-k .* (T_simulation - (T_motion/2))));                % Sigmoid function
-    theta = (theta_min + (theta_max - theta_min) .* s) .* (180/pi);         % Joint angle in degrees
-    omega = gradient(theta,T_simulation);                                   % Angular velocity
-    alpha = gradient(omega,T_simulation);                                   % Angular acceleration
+    theta = (theta_min + (theta_max - theta_min) .* s);                     % Joint angle in rad
+    omega = gradient(theta,T_simulation);                                   % Angular velocity rad/s
+    alpha = gradient(omega,T_simulation);                                   % Angular acceleration rad/s^2
     g = -9.81; % Gravity
     M_hip = (Inertia_system * alpha) - (g * CoM_system * mass_system * cosd(theta)); % Moment about Hip in Nm
     P = M_hip .* omega; % Joint power Watts
@@ -218,19 +218,14 @@ disp(['Combined system mass moment of inertia at O = ',num2str(Inertia_system_de
 
 
 
-disp(mass_system_device)
-disp(CoM_system_device)
-disp(I_seg_o_device)
-
-
 M_hip_system_device = (Inertia_system_device .* alpha_store{3}) - (g * CoM_system_device * mass_system_device * cosd(theta_store{3})); % Moment about Hip in Nm
 P_system_device = M_hip_system_device .* omega_store{3}; % Joint power Watts
 
 P_device = P_system_device - P_store{3};
-P_required = max(P_device + (0.5 .* P_store{3}));
+P_required = max(P_device + (0.5 .* P_store{3}))
 %% TASK 4 - Device Power-Mass Relationship
 
-clc; clear;
+
 
 % Parameters given in assignment
 a = 10.0;
@@ -241,17 +236,16 @@ c = 1.0;
 %m_device = linspace(0, 20, 500);   % adjust range if needed
 
 % Power equation
-P_max = (exp(m_device_total - a) ./ (1 + exp(m_device - a))) * b + c * m_device_total;
-disp()
+P_max = (exp(m_device_total - a) ./ (1 + exp(m_device_total - a))) * b + c * m_device_total
+
 % Plot
-figure
-plot(m_device, P_max, 'LineWidth', 1.5)
+%figure
+%plot(m_device, P_max, 'LineWidth', 1.5)
 
-xlabel('Total Device Mass (kg)')
-ylabel('Maximum Device Power (W)')
-title('Device Power-Mass Relationship')
+%xlabel('Total Device Mass (kg)')
+%%title('Device Power-Mass Relationship')
 
-grid on
+%grid on
 
 
 
@@ -276,8 +270,8 @@ xlabel('X Position (m)')
 ylabel('Y Position (m)')
 
 for j = 1:length(t1)
-    x = L * sind(theta1(j));
-    y = -L * cosd(theta1(j));
+    x = L * sin(theta1(j));
+    y = -L * cos(theta1(j));
 
     set(hLeg, 'XData', [0 x], 'YData', [0 y])
     
