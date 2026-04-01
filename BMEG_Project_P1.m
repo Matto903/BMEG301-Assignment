@@ -91,7 +91,7 @@ theta_min = -30 * (pi/180);           % Minimum angle at extension in rad
 theta_max = 120 * (pi/180);         % Maximum angle at flexion in rad
 
 %% TASK 2
-durations=[5,3,1]
+durations=[5,3,1];
 
 t_store = cell(length(durations),1);
 theta_store = cell(length(durations),1);
@@ -114,7 +114,7 @@ for i=1:length(durations)
     alpha = gradient(omega,T_simulation);                                   % Angular acceleration
     g = -9.81; % Gravity
     M_hip = (Inertia_system * alpha) - (g * CoM_system * mass_system * cosd(theta)); % Moment about Hip in Nm
-    P=M_hip*omega; % Joint power Watts
+    P = M_hip .* omega; % Joint power Watts
 
     t_store{i} = T_simulation;
     theta_store{i} = theta;
