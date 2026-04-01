@@ -218,11 +218,6 @@ disp(['Combined system mass moment of inertia at O = ',num2str(Inertia_system_de
 
 
 
-disp(mass_system_device)
-disp(CoM_system_device)
-disp(I_seg_o_device)
-
-
 M_hip_system_device = (Inertia_system_device .* alpha_store{3}) - (g * CoM_system_device * mass_system_device * cosd(theta_store{3})); % Moment about Hip in Nm
 P_system_device = M_hip_system_device .* omega_store{3}; % Joint power Watts
 
