@@ -1,8 +1,32 @@
+%% BMEG301 Reverse Dynamic Solution For Device 3
+% Authors: Bailey Phillips, Matthew Nuske, Oliver Michels, and Kyan Phillips
+
+%% Assumptions
+
+% The thigh is consider to be pivoted at the hip joint and has one DoF in flexion-extension. 
+% Distal limb (shank) is fixed such that the longitudinal axis line up. 
+% All other limbs can be ignored.
+
 clc, clear
 
+%% Parameters
+
+% Subject Paramters
 gender = 2; % 1 for female, 2 for male
 weight = 85; % Total body mass of subject in 'kg'
 height = 1.84; % Total body height of subject in 'm'
+
+% Simulation Parameters
+fps = 50;                           % Frames per second 
+T_motion = 5;                       % Motion duration in seconds
+
+
+% These are the first things i saw for the rom of the thigh about the hip.
+% we can change this if we find its different with more research - Oli
+theta_min = 0;                      % Minimum angle at extension
+theta_max = 120;                    % Maximum angle at flexion
+
+%% Segment Factor Tables
 
 % Segment factors based of De lava Table
 % [Mass factor   Length factor   COM factor  Radius of Gyration factor]
@@ -18,6 +42,9 @@ segment_table(2).factors = [
 0.1416  422.2/1741  0.4095  0.329;  % Thigh (male)
 0.0433  434.0/1741  0.4459  0.255   % Shank (male)
 ];  
+
+
+%% Create Structures With All of The Model's Segment Details 
 
 model(1).name = 'Thigh'; model(1).color = 'k';
 model(2).name = 'Shank'; model(2).color = 'r';
@@ -47,7 +74,7 @@ for part = 1:2
     disp(t)
 end
 
-% System center of mass
+% System Center of Mass
 mass_system = sum([model(:).mass]);
 
 % display system mass
@@ -57,7 +84,15 @@ r_num = [model(:).mass].*[model(:).com_from_O];
 CoM_system = sum(r_num)/mass_system;
 disp([newline, 'System center of mass position = ',num2str(CoM_system),' m']);
 
-% System inertia about the hip
+% System Inertia About The Hip
 I_seg_o = [model(:).inertia] + [model(:).mass].*([model(:).com_from_O].^2);
 Inertia_system = sum(I_seg_o);
 disp(['System mass moment of inertia at O = ',num2str(Inertia_system),' kg.m^2']);
+
+
+%% Simulation 
+Num_Frames = ceil(T_motion*fps);                        % Calculates number of frames in the simulation
+T_simulation = linspace(0, T_motion, Num_Frames);       % Creates a linearly spaced time vector for motion duration
+
+
+
