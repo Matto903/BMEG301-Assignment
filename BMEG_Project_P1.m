@@ -246,10 +246,16 @@ P_max = (exp(mass_device_total - a) ./ (1 + exp(mass_device_total - a))) * b + c
 
 M_Device=M_hip_system_device-M_store{3};
 
+thigh_density = 1050; % From Research in kg/m^3
+thigh_volume = model(1).mass / thigh_density; % Thigh volume assuming thigh is a perfect cylinder
+thigh_cs_area = thigh_volume / model(1).length; % Thigh cross sectional area, again using perfect cylinder assumption
+thigh_radius = sqrt(thigh_cs_area / pi); % Radius of thigh, cylinder assumption
+thigh_circumference = 2 * pi * thigh_radius; % Circumference of the thigh, cylinder
+
 % Assumed device cuff geometry
 r_arm = 0.3;                     % m, effective moment arm from hip to thigh cuff
 strap_width = 0.08;               % m
-contact_length = 0.3;            % m
+contact_length = 0.5 * thigh_circumference;            % m, assuming contact length is half of thigh circumference
 A_strap = strap_width * contact_length;   % m^2
 
 % Strap force magnitude
