@@ -90,8 +90,8 @@ fps = 50;                           % Frames per second
 theta_min = -30 * (pi/180);           % Minimum angle at extension in rad
 theta_max = 120 * (pi/180);         % Maximum angle at flexion in rad
 
-%% TASK 2
-durations=[1,3,5];
+%% TASK 2 & 3
+durations=[5,3,1];
 
 t_store = cell(length(durations),1);
 theta_store = cell(length(durations),1);
