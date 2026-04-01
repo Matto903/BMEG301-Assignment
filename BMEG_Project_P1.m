@@ -1,4 +1,4 @@
-%% BMEG301 Reverse Dynamic Solution For Device 3
+ %% BMEG301 Reverse Dynamic Solution For Device 3
 % Authors: Bailey Phillips, Matthew Nuske, Oliver Michels, and Kyan Phillips
 
 %% Assumptions
