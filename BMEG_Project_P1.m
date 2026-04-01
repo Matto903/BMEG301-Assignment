@@ -172,10 +172,16 @@ end
 hold off;
 
 
+
 %% Part 5
 
 mass_device_total = 8;         % EXAMPLE device mass in kg
 mass_device_pivoted = 0.6 .* mass_device_total;
+
+% Part 5
+m_device_total = 8;                  % example
+m_device_pivoted = 0.6 * m_device_total;
+
 
 model_device = model;
 
@@ -207,7 +213,14 @@ disp(['Combined system center of mass position = ',num2str(CoM_system_device),' 
 % Combined System Inertia About The Hip
 I_seg_o_device = [model_device(:).inertia] + [model_device(:).mass].*([model_device(:).com_from_O].^2);
 Inertia_system_device = sum(I_seg_o_device);
+
 disp(['Combined system mass moment of inertia at O = ',num2str(Inertia_system_device),' kg.m^2']);
+
+
+
+disp(mass_system_device)
+disp(CoM_system_device)
+disp(I_seg_o_device)
 
 
 M_hip_system_device = (Inertia_system_device .* alpha_store{3}) - (g * CoM_system_device * mass_system_device * cosd(theta_store{3})); % Moment about Hip in Nm
