@@ -162,12 +162,12 @@ for i = 1:3
     % Joint Power Over Time
     subplot(2, 3, i + 3);
     plot(t_store{i}, P_store{i})
-    ylabel('Velocity (deg/s)');
+    ylabel('Power (W)');
     xlabel('Time (s)')
     title([label{i} 'Joint Power']);
     
 end
-
+hold off;
 
 
 
@@ -177,7 +177,7 @@ theta1 = theta_store{caseNum};
 
 L = model(1).length + model(2).length;
 
-figure
+figure;
 
 hLeg = plot([0 0], [0 -L], 'LineWidth', 4);
 hold on
@@ -193,8 +193,10 @@ for j = 1:length(t1)
     y = -L * cosd(theta1(j));
 
     set(hLeg, 'XData', [0 x], 'YData', [0 y])
-    title(sprintf('Sagittal Plane Motion (%s), t = %.2f s', label{caseNum}, t1(j)))
+    
+title(sprintf('Sagittal Plane Motion (%s), t = %.2f s', label{caseNum}, t1(j)))
 
     drawnow
     pause(0.02)
+    hold off;
 end
