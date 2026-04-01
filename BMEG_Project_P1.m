@@ -10,7 +10,7 @@ height = 1.84; % Total body height of subject in 'm'
 % Female factors
 segment_table(1).factors = [ 
 0.1478  368.5/1735  0.3612  0.369;  % Thigh
-0.0481  432.3/1735  0.4416  0.291   % Shank
+0.0481  432.3/1735  0.4416  0.271   % Shank
 ];
 
 % Male factors
