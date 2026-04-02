@@ -153,14 +153,14 @@ for i = 1:3
     plot(t_store{i}, omega_store{i} .* (180/pi))
     ylabel('Velocity (deg/s)');
     xlabel('Time (s)')
-    title([label{i} 'Joint Anglular Velocity']);
+    title([label{i} 'Joint Angular Velocity']);
     
     % Joint Angular   Acceleration Over Time
     subplot(3, 3, i + 6);
     plot(t_store{i}, alpha_store{i} .* (180/pi));
     ylabel('  Acceleration (deg/s^2)');
     xlabel('Time (s)')
-    title([label{i} 'Joint Anglular   Acceleration']);
+    title([label{i} 'Joint Angular Acceleration']);
 end
 
 %% Task 3 Plotting
