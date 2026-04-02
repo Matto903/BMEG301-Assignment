@@ -85,15 +85,11 @@ disp(['System mass moment of inertia at O = ',num2str(Inertia_system),' kg.m^2']
 
 %% Simulation Parameters
 fps = 50;                           % Frames per second 
-                    % Motion duration in seconds
-
-% These are the first things i saw for the rom of the thigh about the hip.
-% we can change this if we find its different with more research - Oli
 theta_min = -30 * (pi/180);           % Minimum angle at extension in rad
 theta_max = 120 * (pi/180);         % Maximum angle at flexion in rad
 
 %% TASK 2 & 3
-durations=[5,3,1];
+durations=[5,3,2];
 
 t_store = cell(length(durations),1);
 theta_store = cell(length(durations),1);
@@ -103,19 +99,23 @@ M_store = cell(length(durations),1);
 P_store = cell(length(durations),1);
 
 for i=1:length(durations)
-    T_motion = durations(i);   
+    T_motion = durations(i);   % Motion duration in seconds
     % Simulation 
     Num_Frames = ceil(T_motion*fps);                        % Calculates number of frames in the simulation
     T_simulation = linspace(0, T_motion, Num_Frames);       % Creates a linearly spaced time vector for motion duration
 
     % Sigmoid Function To Calculate Joint Angle
-    k = 2.5;                                                                % Steepness of sigmoid function (scales with the motion duration)
-    s = 1 ./ (1 + exp(-k .* (T_simulation - (T_motion/2))));                % Sigmoid function
+    k = 0.1 / T_motion;                                                     % Steepness of sigmoid function
+    
+    % Normalise sigmoid function sych that s goes exactly from 0 to 1
+    s_raw = 1 ./ (1 + exp(-k .* (T_simulation - (T_motion/2))));
+    s = (s_raw - s_raw(1)) ./ (s_raw(end) - s_raw(1));      
+
     theta = (theta_min + (theta_max - theta_min) .* s);                     % Joint angle in rad
     omega = gradient(theta,T_simulation);                                   % Angular velocity rad/s
-    alpha = gradient(omega,T_simulation);                                   % Angular acceleration rad/s^2
-    g = -9.81; % Gravity
-    M_hip = (Inertia_system * alpha) - (g * CoM_system * mass_system * cos(theta)); % Moment about Hip in Nm
+    alpha = gradient(omega,T_simulation);                                   % Angular  Acceleration rad/s^2
+    g = 9.81; % Gravity
+    M_hip = (Inertia_system * alpha) + (g * CoM_system * mass_system * sin(theta)); % Moment about Hip in Nm
     P = M_hip .* omega; % Joint power Watts
 
     t_store{i} = T_simulation;
@@ -145,12 +145,12 @@ for i = 1:3
     xlabel('Time (s)')
     title([label{i} 'Joint Anglular Velocity']);
     
-    % Joint Angular Accelleration Over Time
+    % Joint Angular   Acceleration Over Time
     subplot(3, 3, i + 6);
     plot(t_store{i}, alpha_store{i} .* (180/pi));
-    ylabel('Accelleration (deg/s^2)');
+    ylabel('  Acceleration (deg/s^2)');
     xlabel('Time (s)')
-    title([label{i} 'Joint Anglular Accelleration']);
+    title([label{i} 'Joint Anglular   Acceleration']);
 end
 
 figure;
@@ -219,7 +219,7 @@ P_system_device_store = cell(length(durations),1);
 
 for i=1:length(durations)
     
-    M_hip_system_device = (Inertia_system_device * alpha_store{i}) - (g * CoM_system_device * mass_system_device * cos(theta_store{i})); % Moment about Hip in Nm
+    M_hip_system_device = (Inertia_system_device * alpha_store{i}) + (g * CoM_system_device * mass_system_device * sin(theta_store{i})); % Moment about Hip in Nm
     P_system_device = M_hip_system_device .* omega_store{i}; % Joint power Watts
 
     M_system_device_store{i} = M_hip_system_device;
@@ -237,7 +237,7 @@ m_device = linspace(0, 20, 500);   % adjust range if needed
 % Power equation
 P_max = (exp(mass_device_total - a) ./ (1 + exp(mass_device_total - a))) * b + c * mass_device_total
 
-P_max1 = (exp(m_device - a) ./ (1 + exp(m_device - a))) * b + c * m_device
+P_max1 = (exp(m_device - a) ./ (1 + exp(m_device - a))) * b + c * m_device;
 
 % Plot
 figure;
@@ -256,7 +256,7 @@ for i = 1:3
     % Joint Moment Over Time
     subplot(2, 3, i);
     plot(t_store{i}, M_system_device_store{i});
-    ylabel('Angle (deg)');
+    ylabel('Moment (Nm)');
     xlabel('Time (s)')
     title([label{i} 'Joint Moment']);
     
@@ -307,7 +307,7 @@ pressure_avg_kPa = mean(pressure_kPa)  % kPa
 
 
 %% Animation
-caseNum = 1;              % 1 = slow, 2 = normal, 3 = fast
+caseNum = 3;              % 1 = slow, 2 = normal, 3 = fast
 t1 = t_store{caseNum};
 theta1 = theta_store{caseNum};
 
