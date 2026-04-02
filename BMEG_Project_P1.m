@@ -3,20 +3,20 @@
 
 %% Assumptions
 
-% The thigh is consider to be pivoted at the hip joint and has one DoF in flexion-extension. 
+% The thigh is considered to be pivoted at the hip joint and has one DoF in flexion-extension. 
 % Distal limb (shank) is fixed such that the longitudinal axis line up. 
 % All other limbs can be ignored.
 % Pivoted part of the device contains 60% of device mass
-% Non pivoted part of the device is rigidly attatched to the human base limb (hip)
+% Non pivoted part of the device is rigidly attached to the human base limb (hip)
 % Pivot limb and device are coincident
 % Device does not change radius of gyration
-% Reasonable values for moment arm and surface area of the device attatching strap
+% Reasonable values for moment arm and surface area of the device attaching strap
 
 clc, clear
 
 %% Parameters
 
-% Subject Paramters
+% Subject Parameters
 gender = 2; % 1 for female, 2 for male
 weight = 85; % Total body mass of subject in 'kg'
 height = 1.84; % Total body height of subject in 'm'
@@ -115,7 +115,7 @@ for i=1:length(durations)
     s_raw = 1 ./ (1 + exp(-k .* (T_simulation - (T_motion/2))));        % Raw function to normalise s between 0-1
     s = (s_raw - s_raw(1)) ./ (s_raw(end) - s_raw(1));                  % Normalised sigmoid function
 
-    % Apply sigmoid function to determine joint angle across time, and calulate angular velocity and acceleration
+    % Apply sigmoid function to determine joint angle across time, and calculate angular velocity and acceleration
     theta = (theta_min + (theta_max - theta_min) .* s);      % Joint angle in rad
     omega = gradient(theta,T_simulation);                   % Angular velocity rad/s
     alpha = gradient(omega,T_simulation);                   % Angular  acceleration rad/s^2
@@ -271,7 +271,7 @@ strap_width = 0.08;                                 % Assumed width of strap in 
 contact_length = 0.5 * thigh_circumference;         % Contact length in m, assuming half of thigh circumference is in contact 
 A_strap = strap_width * contact_length;             % Area of the strap in m^2
 
-% Calcularte the pressure of the strap on the thigh
+% Calculate the pressure of the strap on the thigh
 F_strap = abs(M_Device) ./ r_arm;         % Strap force magnitude on the thigh in N
 pressure = F_strap ./ A_strap;            % Strap pressure on thigh in Pa
 pressure_kPa = pressure / 1000;           % Strap pressure on thigh in kPa
@@ -288,7 +288,7 @@ pressure_avg_kPa = mean(pressure_kPa)       % Average strap pressure on the thig
 
 % Calulate the respective power for a range of device masses
 m_device = linspace(0, 20, 500);                                                % 500 linear spaced values 0-20
-P_max1 = (exp(m_device - a) ./ (1 + exp(m_device - a))) * b + c * m_device;     % 500 corrosponding power values
+P_max1 = (exp(m_device - a) ./ (1 + exp(m_device - a))) * b + c * m_device;     % 500 corresponding power values
 
 % Plot the power to mass ratio function
 figure;
