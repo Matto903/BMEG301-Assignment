@@ -321,11 +321,6 @@ end
 P_device = P_system_device - P_store{3};
 P_required = max(P_device + (0.5 .* P_store{3}))
 
-%% TASK 4 - Device Power-Mass Relationship
-
-
-
-
 %% Animation
 caseNum = 3;              % 1 = slow, 2 = normal, 3 = fast
 t1 = t_store{caseNum};
