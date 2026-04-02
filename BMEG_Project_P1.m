@@ -194,7 +194,7 @@ hold off;
 mass_device_total = 13;                             % Device mass in kg 
 mass_device_pivoted = 0.6 .* mass_device_total;     % Pivoted device mass in kg
 
-% Define a sctructure for the human-device model
+% Define a structure for the human-device model
 model_device = model;
 
 model_device(1).rgyration = model(1).rgyration;                                     % Radius of gyration remains the same (as stated in assumptions)
