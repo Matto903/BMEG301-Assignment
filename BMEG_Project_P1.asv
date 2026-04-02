@@ -249,9 +249,12 @@ c = 1.0;
 
 P_max = (exp(mass_device_total - a) ./ (1 + exp(mass_device_total - a))) * b + c * mass_device_total        % Maximum power from the device
 
-% Determine the pressure on the thigh from the device
+% Determine the moment produced by the device
 M_Device = M_hip_system_device - M_store{3};
 
+% Determine the power required 
+P_device = P_system_device - P_store{3};            % Power needed to account for the device (difference from human system to human-device system)
+P_required = max(P_device + (0.5 .* P_store{3}))    % Power required (power needed to account for device + 50% power produced by human system)
 
 % Assuming the thigh to be a perfect cylinder, calculate the thigh circumference
 thigh_density = 1050;                               % Thigh density value (from research) in kg/m^3
@@ -261,24 +264,22 @@ thigh_radius = sqrt(thigh_cs_area / pi);            % Radius of thigh in m
 thigh_circumference = 2 * pi * thigh_radius;        % Circumference of the thigh, cylinder in m
 
 % Assumed device cuff geometry
-r_arm = 0.3;                                        % m, effective moment arm from hip to thigh cuff
+r_arm = 0.3;                                        % Assumed effective moment arm from hip to thigh cuff in m
 strap_width = 0.08;                                 % Assumed width of strap in m
-contact_length = 0.5 * thigh_circumference;         % Contact length assuming half of thigh circumference is in contact in m
-A_strap = strap_width * contact_length;             % Area of the stram^2
+contact_length = 0.5 * thigh_circumference;         % Contact length in m, assuming half of thigh circumference is in contact 
+A_strap = strap_width * contact_length;             % Area of the strap in m^2
 
-% Strap force magnitude
-F_strap = abs(M_Device) ./ r_arm;         % N
+% Calcularte the pressure of the strap on the thigh
+F_strap = abs(M_Device) ./ r_arm;         % Strap force magnitude on the thigh in N
+pressure = F_strap ./ A_strap;            % Strap pressure on thigh in Pa
+pressure_kPa = pressure / 1000;           % Strap pressure on thigh in kPa
 
-% Pressure on thigh
-pressure = F_strap ./ A_strap;            % Pa
-pressure_kPa = pressure / 1000;           % kPa
-
-% Peak values
-F_peak = max(F_strap);
-pressure_peak = max(pressure);
-pressure_peak_kPa = max(pressure_kPa)
-pressure_avg = mean(pressure);          % Pa
-pressure_avg_kPa = mean(pressure_kPa)  % kPa
+% Define peak values from the strap
+F_peak = max(F_strap);                      % Maximum strap force magnitude on the thigh
+pressure_peak = max(pressure);              % Maximum strap pressure on the thigh in Pa
+pressure_peak_kPa = max(pressure_kPa)       % Maximum strap pressure on the thigh in kPa
+pressure_avg = mean(pressure);              % Average strap pressure on the thigh in Pa
+pressure_avg_kPa = mean(pressure_kPa)       % Average strap pressure on the thigh in kPa
 
 
 %% Task 4 Plotting
@@ -317,14 +318,6 @@ for i = 1:3
     title([label{i} 'Joint Power']);
     
 end
-
-P_device = P_system_device - P_store{3};
-P_required = max(P_device + (0.5 .* P_store{3}))
-
-%% TASK 4 - Device Power-Mass Relationship
-
-
-
 
 %% Animation
 caseNum = 3;              % 1 = slow, 2 = normal, 3 = fast
